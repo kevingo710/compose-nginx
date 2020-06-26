@@ -1,0 +1,22 @@
+version: '2'
+
+services:
+  miniflux:
+    image: miniflux/miniflux:latest
+    expose:
+      - 80
+    volumes:
+      - miniflux_data:/var/www/html/data
+    environment:
+      VIRTUAL_HOST: feeds.example.com
+      LETSENCRYPT_HOST: feeds.example.com
+      LETSENCRYPT_EMAIL: foo@example.com
+
+volumes:
+  miniflux_data:
+        driver: local
+
+networks:
+    default:
+        external:
+            name: nginx-proxy
