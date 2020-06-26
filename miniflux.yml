@@ -8,9 +8,9 @@ services:
     volumes:
       - miniflux_data:/var/www/html/data
     environment:
-      VIRTUAL_HOST: feeds.example.com
-      LETSENCRYPT_HOST: feeds.example.com
-      LETSENCRYPT_EMAIL: foo@example.com
+      VIRTUAL_HOST: dinasaccarola.me
+      LETSENCRYPT_HOST: dinasaccarola.me
+      LETSENCRYPT_EMAIL: kevingracia07@gmail.com
 
 volumes:
   miniflux_data:
