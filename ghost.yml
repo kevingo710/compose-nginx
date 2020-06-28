@@ -3,8 +3,8 @@ services:
     ghost:
         image: ghost:1-alpine
         restart: always
-        expose:
-          - 80
+        ports:
+          - 127.0.0.1:8080:2368
         volumes:
           - ./blog/data/ghost:/var/lib/ghost/content
         environment:
