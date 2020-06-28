@@ -1,0 +1,43 @@
+version: '3.1'
+
+services:
+   joomladb:
+    image: mysql:8.0.13
+    command: --default-authentication-plugin=mysql_native_password
+     volumes:
+        - db_data:/var/lib/mysql
+     restart: always
+     environment:
+        MYSQL_ROOT_PASSWORD: example
+        MYSQL_DATABASE: joomla
+        MYSQL_USER: joomlauser
+        MYSQL_PASSWORD: joomlauserpass
+     container_name: joomla_db
+
+
+  joomla:
+    depends_on:
+       - joomladb
+    image: joomla
+    restart: always
+    expose:
+      - 80
+    volumes:
+      - "joomla_data:/var/www/html"
+    environment:
+      VIRTUAL_HOST: dominio.com
+      LETSENCRYPT_HOST: dominio.com
+      LETSENCRYPT_EMAIL: dominio.com
+      JOOMLA_DB_HOST: joomladb:3306
+      JOOMLA_DB_HOST: joomlauser
+      JOOMLA_DB_PASSWORD: example
+    container_name: joomla_test
+
+volumes:
+  db_data:
+  joomla_data:
+
+networks:
+  default:
+    external:
+      name: nginx-proxy
