@@ -1,42 +1,32 @@
 version: '3.1'
 
 services:
-   joomladb:
-    image: mysql:8.0.13
-    command: --default-authentication-plugin=mysql_native_password
-     volumes:
-        - db_data:/var/lib/mysql
-     restart: always
-     environment:
-        MYSQL_ROOT_PASSWORD: example
-        MYSQL_DATABASE: joomla
-        MYSQL_USER: joomlauser
-        MYSQL_PASSWORD: joomlauserpass
-     container_name: joomla_db
-
-
   joomla:
-    depends_on:
-       - joomladb
-    image: joomla
+    image: joomla:3.9.5-php7.3-fpm-alpine
     restart: always
-    expose:
-      - 80
-    volumes:
-      - "joomla_data:/var/www/html"
     environment:
-      VIRTUAL_HOST: dominio.com
-      LETSENCRYPT_HOST: dominio.com
-      LETSENCRYPT_EMAIL: dominio.com
-      JOOMLA_DB_HOST: joomladb:3306
-      JOOMLA_DB_HOST: joomlauser
-      JOOMLA_DB_PASSWORD: example
-    container_name: joomla_test
+      JOOMLA_DB_HOST=db
+      JOOMLA_DB_USER=postgres
+      JOOMLA_DB_PASSWORD=mysecretpassword
+      JOOMLA_DB_NAME=db
+      VIRTUAL_HOST: kevingo.codes
+      LETSENCRYPT_HOST: kevingo.codes
+      LETSENCRYPT_EMAIL: corre@dominio.com
+    volumes:
+      - ./joomla:/var/www/html
+      - ./makedb.php:/makedb.php
+    depends_on:
+      - db
 
-volumes:
-  db_data:
-  joomla_data:
-
+  db:
+    image: postgres:11.2-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=mysecretpassword
+    volumes:
+      - ./db:/var/lib/postgresql/data
 networks:
   default:
     external:
