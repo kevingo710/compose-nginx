@@ -1,0 +1,40 @@
+version: "3"
+
+services:
+   db_node_domain:
+     image: postgres:10
+     volumes:
+        - pg_data:/var/lib/postgresql/data
+     restart: always
+     environment:
+        POSTGRES_PASSWORD: your_postgres_password
+     container_name: dp_test_db
+
+   drupal:
+     depends_on:
+        - db_node_domain
+     image: drupal:latest
+     expose:
+        - 80
+     restart: always
+      volumes:
+         - drupal_modules:/var/www/html/modules
+         - drupal_profiles:/var/www/html/profiles
+         - drupal_themes:/var/www/html/themes
+         - drupal_sites:/var/www/html/sites
+     environment:
+        VIRTUAL_HOST: kevingo.codes
+        LETSENCRYPT_HOST: kevingo.codes
+        LETSENCRYPT_EMAIL: corre@dominio.com
+     container_name: dp_test
+volumes:
+  drupal_modules:
+  drupal_profiles:
+  drupal_themes:
+  drupal_sites:
+  pg_data:
+
+networks:
+  default:
+    external:
+      name: nginx-proxy
